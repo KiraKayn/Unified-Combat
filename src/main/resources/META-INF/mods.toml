@@ -33,6 +33,13 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.unified_combat]]
+modId="combat_roll"
+mandatory=true
+versionRange="[1.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.unified_combat]]
 modId="irons_spellbooks"
 mandatory=false
 versionRange="[1.0,)"

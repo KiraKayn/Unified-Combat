@@ -117,6 +117,7 @@ dependencies {
     compileOnly fg.deobf("io.redspace:irons_spellbooks:${irons_spells_version}:api")
     runtimeOnly fg.deobf("io.redspace:irons_spellbooks:${irons_spells_version}")
     implementation fg.deobf("curse.maven:better-combat-by-daedelus-639842:7287334")
+    implementation fg.deobf("curse.maven:combat-roll-678036:5625925")
 
     // Dev Env Mods
     runtimeOnly fg.deobf("curse.maven:mmmmmmmmmmmm-225738:6608233")
