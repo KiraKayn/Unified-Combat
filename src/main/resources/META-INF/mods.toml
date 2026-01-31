@@ -1,0 +1,47 @@
+modLoader="javafml"
+loaderVersion="[47,)"
+
+license="LGPL-2.1-or-later"
+issueTrackerURL=""
+showAsResourcePack=false
+
+[[mods]]
+modId="unified_combat"
+version="${version}"
+displayName="Unified Combat"
+displayURL=""
+logoFile=""
+credits=""
+authors="Kayn"
+description='''
+  A compatibility bridge for Irons Spells and Spellbooks, Better Combat, and Combat Roll — rolling now cancels spellcasting and attacking for a more cohesive combat experience.
+  '''
+displayTest="MATCH_VERSION"
+
+[[dependencies.unified_combat]]
+modId="forge"
+mandatory=true
+versionRange="[47.4.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.unified_combat]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.20.1,1.21)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.unified_combat]]
+modId="irons_spellbooks"
+mandatory=false
+versionRange="[1.0,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.unified_combat]]
+modId="bettercombat"
+mandatory=false
+versionRange="[1.0,)"
+ordering="AFTER"
+side="BOTH"
