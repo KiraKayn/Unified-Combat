@@ -33,8 +33,8 @@ ordering="NONE"
 side="BOTH"
 
 [[dependencies.unified_combat]]
-modId="combat_roll"
-mandatory=true
+modId="combatroll"
+mandatory=false
 versionRange="[1.0,)"
 ordering="AFTER"
 side="BOTH"
