@@ -51,13 +51,13 @@ public class RollCancelSpellHandler {
             AbstractSpell spell = spellData.getSpell();
             String spellId = spell.getSpellId();
             List<String> whitelist = ModConfig.ALLOWED_ROLL_SPELLS.get();
-
             if (whitelist != null && whitelist.contains(spellId)) return;
 
             int total = magic.getCastDuration();
             int remaining = magic.getCastDurationRemaining();
             float progress = total > 0 ? (float) (total - remaining) / (float) total : 0f;
             progress = Math.min(1f, Math.max(0f, progress));
+
             if (ModConfig.PANIC_ROLL_PENALTY.get()) {
                 float manaCost = spell.getManaCost(spellData.getLevel());
                 float minFlat = (float) ModConfig.MANA_DEDUCT_MIN_FLAT.get().doubleValue();
@@ -139,7 +139,6 @@ public class RollCancelSpellHandler {
 
             Utils.serverSideCancelCast(player);
             magic.resetCastingState();
-
 
             ServerLevel level = player.serverLevel();
             level.playSound(

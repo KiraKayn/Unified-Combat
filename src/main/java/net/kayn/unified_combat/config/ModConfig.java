@@ -14,10 +14,8 @@ public class ModConfig {
     public static final ForgeConfigSpec.BooleanValue ENABLE_BACKLASH_EFFECTS;
     public static final ForgeConfigSpec.BooleanValue ANTI_SPAM_CAST;
 
-
     public static final ForgeConfigSpec.DoubleValue MANA_DEDUCT_MIN_FLAT;
     public static final ForgeConfigSpec.DoubleValue MANA_DEDUCT_MAX_PERCENT;
-
 
     public static final ForgeConfigSpec.IntValue MIN_ROLL_CANCEL_COOLDOWN;
     public static final ForgeConfigSpec.IntValue MAX_ROLL_CANCEL_COOLDOWN;
