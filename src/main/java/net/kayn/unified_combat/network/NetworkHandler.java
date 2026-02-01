@@ -20,7 +20,6 @@ public class NetworkHandler {
                 "1"::equals
         );
 
-        // server -> client (and client -> server) CancelCastPacket (keeps original behavior)
         INSTANCE.registerMessage(
                 ID.getAndIncrement(),
                 CancelCastPacket.class,
@@ -29,7 +28,6 @@ public class NetworkHandler {
                 CancelCastPacket::handle
         );
 
-        // single RollBufferPacket (both directions; handler checks execute flag)
         INSTANCE.registerMessage(
                 ID.getAndIncrement(),
                 RollBufferPacket.class,
@@ -44,6 +42,13 @@ public class NetworkHandler {
                 CancelRollPacket::write,
                 CancelRollPacket::read,
                 CancelRollPacket::handle
+        );
+        INSTANCE.registerMessage(
+                ID.getAndIncrement(),
+                CancelBCSwingPacket.class,
+                CancelBCSwingPacket::write,
+                CancelBCSwingPacket::read,
+                CancelBCSwingPacket::handle
         );
     }
 
