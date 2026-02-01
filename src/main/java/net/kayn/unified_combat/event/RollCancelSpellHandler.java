@@ -38,7 +38,6 @@ public class RollCancelSpellHandler {
     }
 
     private static void onRoll(ServerPlayer player, Vec3 rollVelocity) {
-        // Global enable check
         if (!ModConfig.ENABLE_ROLL_CANCEL.get()) return;
         if (player == null) return;
 
@@ -53,15 +52,12 @@ public class RollCancelSpellHandler {
             String spellId = spell.getSpellId();
             List<String> whitelist = ModConfig.ALLOWED_ROLL_SPELLS.get();
 
-            // whitelist check
             if (whitelist != null && whitelist.contains(spellId)) return;
 
             int total = magic.getCastDuration();
             int remaining = magic.getCastDurationRemaining();
             float progress = total > 0 ? (float) (total - remaining) / (float) total : 0f;
             progress = Math.min(1f, Math.max(0f, progress));
-
-            /* ---------------- Mana penalty ---------------- */
             if (ModConfig.PANIC_ROLL_PENALTY.get()) {
                 float manaCost = spell.getManaCost(spellData.getLevel());
                 float minFlat = (float) ModConfig.MANA_DEDUCT_MIN_FLAT.get().doubleValue();
@@ -70,7 +66,6 @@ public class RollCancelSpellHandler {
                 magic.setMana(Math.max(0f, magic.getMana() - penalty));
             }
 
-            /* ---------------- School effects & visuals ---------------- */
             String school = spell.getSchoolType().getId().toString();
             String sound = "entity.arrow.hit_player";
             String particle = "minecraft:campfire_cosy_smoke";
@@ -126,12 +121,10 @@ public class RollCancelSpellHandler {
                         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 60, 0));
                     }
                     default -> {
-                        // keep defaults
                     }
                 }
             }
 
-            /* ---------------- Anti-spam cooldown ---------------- */
             if (ModConfig.ANTI_SPAM_CAST.get()) {
                 int maxCd = ModConfig.MAX_ROLL_CANCEL_COOLDOWN.get();
                 int minCd = ModConfig.MIN_ROLL_CANCEL_COOLDOWN.get();
@@ -144,11 +137,10 @@ public class RollCancelSpellHandler {
                 sync.invoke(cooldowns, player);
             }
 
-            /* ---------------- Cancel cast server-side ---------------- */
             Utils.serverSideCancelCast(player);
             magic.resetCastingState();
 
-            /* ---------------- Play sound ---------------- */
+
             ServerLevel level = player.serverLevel();
             level.playSound(
                     null,
@@ -159,7 +151,6 @@ public class RollCancelSpellHandler {
                     1.1f
             );
 
-            /* ---------------- Spawn particles in roll direction ---------------- */
             ParticleOptions particleOptions = resolveParticle(particle);
             Vec3 dir = rollVelocity != null ? rollVelocity.normalize() : Vec3.ZERO;
             int particleCount = ModConfig.ROLL_PARTICLE_COUNT.get();
@@ -178,7 +169,6 @@ public class RollCancelSpellHandler {
                 );
             }
 
-            /* ---------------- Notify client to stop cast animation ---------------- */
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
                     new CancelCastPacket()

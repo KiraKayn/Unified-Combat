@@ -9,29 +9,23 @@ public class ModConfig {
 
     public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    /* ---------------- General ---------------- */
-
     public static final ForgeConfigSpec.BooleanValue ENABLE_ROLL_CANCEL;
     public static final ForgeConfigSpec.BooleanValue PANIC_ROLL_PENALTY;
     public static final ForgeConfigSpec.BooleanValue ENABLE_BACKLASH_EFFECTS;
     public static final ForgeConfigSpec.BooleanValue ANTI_SPAM_CAST;
 
-    /* ---------------- Mana ---------------- */
 
     public static final ForgeConfigSpec.DoubleValue MANA_DEDUCT_MIN_FLAT;
     public static final ForgeConfigSpec.DoubleValue MANA_DEDUCT_MAX_PERCENT;
 
-    /* ---------------- Cooldowns ---------------- */
 
     public static final ForgeConfigSpec.IntValue MIN_ROLL_CANCEL_COOLDOWN;
     public static final ForgeConfigSpec.IntValue MAX_ROLL_CANCEL_COOLDOWN;
 
-    /* ---------------- Effects ---------------- */
 
     public static final ForgeConfigSpec.DoubleValue BACKLASH_EFFECT_CHANCE;
     public static final ForgeConfigSpec.IntValue ROLL_PARTICLE_COUNT;
 
-    /* ---------------- Spell Whitelist ---------------- */
 
     public static final ForgeConfigSpec.ConfigValue<List<String>> ALLOWED_ROLL_SPELLS;
 

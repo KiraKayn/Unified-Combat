@@ -17,10 +17,8 @@ public class UnifiedCombat {
     public UnifiedCombat(FMLJavaModLoadingContext context) {
         LOGGER.info("Loading Unified Combat");
 
-        // EXACT same pattern as FallenGemsAffixes
         context.registerConfig(Type.COMMON, ModConfig.SPEC);
 
-        // Register roll handler
         RollCancelSpellHandler.register();
     }
 }
