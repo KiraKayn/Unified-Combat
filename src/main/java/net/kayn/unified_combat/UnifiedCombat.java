@@ -2,8 +2,15 @@ package net.kayn.unified_combat;
 
 import net.kayn.unified_combat.config.ModConfig;
 import net.kayn.unified_combat.event.RollCancelSpellHandler;
+import net.kayn.unified_combat.event.RollLockServer;
+import net.kayn.unified_combat.client.RollInputHandler;
+import net.kayn.unified_combat.network.NetworkHandler;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,8 +24,27 @@ public class UnifiedCombat {
     public UnifiedCombat(FMLJavaModLoadingContext context) {
         LOGGER.info("Loading Unified Combat");
 
-        context.registerConfig(Type.COMMON, ModConfig.SPEC);
+        // Register config
+        ModLoadingContext.get().registerConfig(Type.COMMON, ModConfig.SPEC);
 
+        // Register lifecycle events
+        context.getModEventBus().addListener(this::setup);
+        context.getModEventBus().addListener(this::clientSetup);
+    }
+
+    private void setup(final FMLCommonSetupEvent event) {
+        LOGGER.info("Common setup for Unified Combat");
+
+        // Register network channels & packets
+        NetworkHandler.register();
+
+        // Server-side event handlers
+        MinecraftForge.EVENT_BUS.register(new RollLockServer());
         RollCancelSpellHandler.register();
+        RollLockServer.registerRollStartListener();
+    }
+
+    private void clientSetup(final FMLClientSetupEvent event) {
+        LOGGER.info("Client setup for Unified Combat");
     }
 }

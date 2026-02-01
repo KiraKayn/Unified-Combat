@@ -27,12 +27,17 @@ public class ModConfig {
 
     public static final ForgeConfigSpec.ConfigValue<List<String>> ALLOWED_ROLL_SPELLS;
 
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ROLL_LOCK;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ROLL_LOCK_FEEDBACK;
+    public static final ForgeConfigSpec.IntValue ROLL_LOCK_BUFFER_WINDOW;
+    public static final ForgeConfigSpec.ConfigValue<List<String>> ROLL_LOCK_WHITELIST;
+
     static {
         BUILDER.push("Unified Combat");
 
         ENABLE_ROLL_CANCEL = BUILDER
                 .comment("Allows rolling to cancel spell casting")
-                .define("enableRollCancel", true);
+                .define("enableRollCancel", false);
 
         PANIC_ROLL_PENALTY = BUILDER
                 .comment("Deduct mana when cancelling a spell via roll")
@@ -89,6 +94,28 @@ public class ModConfig {
                         "irons_spellbooks:root"
                 )));
 
+        BUILDER.push("Roll Lock");
+
+        ENABLE_ROLL_LOCK = BUILDER
+                .comment("Prevent rolling while casting spells")
+                .define("enableRollLock", true);
+
+        ENABLE_ROLL_LOCK_FEEDBACK = BUILDER
+                .comment("Play sound/text when roll is blocked while casting")
+                .define("enableRollLockFeedback", true);
+
+        ROLL_LOCK_BUFFER_WINDOW = BUILDER
+                .comment("Ticks before spell ends where rolling can be buffered (0 = disabled)")
+                .defineInRange("rollLockBufferWindow", 5, 0, 20);
+
+        ROLL_LOCK_WHITELIST = BUILDER
+                .comment("Spells allowed to roll while casting even with roll lock enabled")
+                .define("rollLockWhitelist", new ArrayList<>(List.of(
+                        "irons_spellbooks:magic_arrow",
+                        "irons_spellbooks:poison_arrow"
+                )));
+
+        BUILDER.pop();
         BUILDER.pop();
     }
 

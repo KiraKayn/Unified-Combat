@@ -14,18 +14,36 @@ public class NetworkHandler {
 
     public static void register() {
         INSTANCE = NetworkRegistry.newSimpleChannel(
-                new ResourceLocation(UnifiedCombat.MOD_ID, "cancel_cast"),
+                new ResourceLocation(UnifiedCombat.MOD_ID, "unified_combat"),
                 () -> "1",
                 "1"::equals,
                 "1"::equals
         );
 
+        // server -> client (and client -> server) CancelCastPacket (keeps original behavior)
         INSTANCE.registerMessage(
                 ID.getAndIncrement(),
                 CancelCastPacket.class,
                 CancelCastPacket::write,
                 CancelCastPacket::read,
                 CancelCastPacket::handle
+        );
+
+        // single RollBufferPacket (both directions; handler checks execute flag)
+        INSTANCE.registerMessage(
+                ID.getAndIncrement(),
+                RollBufferPacket.class,
+                RollBufferPacket::write,
+                RollBufferPacket::read,
+                RollBufferPacket::handle
+        );
+
+        INSTANCE.registerMessage(
+                ID.getAndIncrement(),
+                CancelRollPacket.class,
+                CancelRollPacket::write,
+                CancelRollPacket::read,
+                CancelRollPacket::handle
         );
     }
 
