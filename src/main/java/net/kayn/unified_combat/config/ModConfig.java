@@ -37,7 +37,7 @@ public class ModConfig {
 
         ENABLE_ROLL_CANCEL = BUILDER
                 .comment("Allows rolling to cancel spell casting")
-                .define("enableRollCancel", false);
+                .define("enableRollCancel", true);
 
         PANIC_ROLL_PENALTY = BUILDER
                 .comment("Deduct mana when cancelling a spell via roll")
@@ -98,7 +98,7 @@ public class ModConfig {
 
         ENABLE_ROLL_LOCK = BUILDER
                 .comment("Prevent rolling while casting spells")
-                .define("enableRollLock", true);
+                .define("enableRollLock", false);
 
         ENABLE_ROLL_LOCK_FEEDBACK = BUILDER
                 .comment("Play sound/text when roll is blocked while casting")
