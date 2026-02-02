@@ -25,7 +25,6 @@ public class AttackRollInputHandler {
     private static boolean rollBuffered = false;
     private static int bufferedRollTicksRemaining = 0;
 
-    private static Class<?> betterCombatHelperClass = null;
     private static Method isDoingUpswingMethod = null;
     private static Method getUpswingTicksMethod = null;
 
@@ -33,22 +32,21 @@ public class AttackRollInputHandler {
 
     static {
         try {
-            betterCombatHelperClass = Class.forName("net.combatroll.compatibility.BetterCombatHelper");
+            Class<?> betterCombatHelperClass = Class.forName("net.combatroll.compatibility.BetterCombatHelper");
             isDoingUpswingMethod = betterCombatHelperClass.getMethod("isDoingUpswing");
             getUpswingTicksMethod = betterCombatHelperClass.getMethod("getUpswingTicks");
         } catch (Throwable ignored) {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public static void onKey(InputEvent.Key event) {
-        if (event.getAction() == 0) return;
-        KeyMapping rollKey = Keybindings.roll;
-        if (rollKey == null) return;
-        if (event.getKey() != rollKey.getKey().getValue()) return;
+        if (shouldBlockRoll()) {
+            KeyMapping rollKey = Minecraft.getInstance().options.keyShift;
 
-        if (handleAttackRollInput(event.getAction())) {
-            event.setCanceled(true);
+            if (rollKey.isDown()) {
+                rollKey.setDown(false);
+            }
         }
     }
 
@@ -84,7 +82,6 @@ public class AttackRollInputHandler {
                 }
             } catch (Throwable t) {
                 inUpswing = false;
-                upswingTicksRemaining = -1;
             }
         }
 
@@ -92,7 +89,6 @@ public class AttackRollInputHandler {
             try {
                 if (mc.player.swinging || mc.player.swingTime > 0 || mc.player.attackAnim > 0) {
                     inUpswing = true;
-                    upswingTicksRemaining = -1;
                 }
             } catch (Throwable ignored) {}
         }
@@ -124,6 +120,31 @@ public class AttackRollInputHandler {
         }
 
         return true;
+    }
+
+    private static boolean shouldBlockRoll() {
+        if (!ModConfig.ENABLE_ATTACK_ROLL_LOCK.get()) return false;
+
+        Minecraft mc = Minecraft.getInstance();
+        if (mc == null || mc.player == null) return false;
+
+        boolean inUpswing = false;
+        if (isDoingUpswingMethod != null) {
+            try {
+                Object swinging = isDoingUpswingMethod.invoke(null);
+                if (swinging instanceof Boolean) inUpswing = (Boolean) swinging;
+            } catch (Throwable ignored) {}
+        }
+
+        if (!inUpswing) {
+            try {
+                if (mc.player.swinging || mc.player.swingTime > 0 || mc.player.attackAnim > 0) {
+                    inUpswing = true;
+                }
+            } catch (Throwable ignored) {}
+        }
+
+        return inUpswing;
     }
 
     @SubscribeEvent
