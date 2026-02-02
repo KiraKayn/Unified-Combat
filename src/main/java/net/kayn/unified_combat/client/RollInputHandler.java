@@ -56,7 +56,8 @@ public class RollInputHandler {
                 String id = ClientMagicData.getCastingSpellId();
                 if (id != null) spellId = id;
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
 
         boolean whitelisted = ModConfig.ROLL_LOCK_WHITELIST.get().contains(spellId);
 
@@ -76,12 +77,12 @@ public class RollInputHandler {
             int remaining = -1;
             try {
                 remaining = ClientMagicData.getCastDurationRemaining();
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
 
             if (remaining >= 0 && remaining <= bufferWindow) {
                 if (NetworkHandler.INSTANCE != null) {
                     NetworkHandler.INSTANCE.sendToServer(new RollBufferPacket(false));
-                    UnifiedCombat.LOGGER.debug("[UC] Roll buffered — {} ticks left on cast", remaining);
                 }
                 return;
             }
@@ -111,8 +112,7 @@ public class RollInputHandler {
                 }
             } catch (ClassNotFoundException ignored) { /* Better Combat not loaded */ }
 
-        } catch (Throwable t) {
-            UnifiedCombat.LOGGER.warn("[UC] cancelClientAttack: {}", t.getMessage());
+        } catch (Throwable ignored) {
         }
     }
 }

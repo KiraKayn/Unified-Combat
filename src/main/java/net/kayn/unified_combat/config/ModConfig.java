@@ -20,10 +20,8 @@ public class ModConfig {
     public static final ForgeConfigSpec.IntValue MIN_ROLL_CANCEL_COOLDOWN;
     public static final ForgeConfigSpec.IntValue MAX_ROLL_CANCEL_COOLDOWN;
 
-
     public static final ForgeConfigSpec.DoubleValue BACKLASH_EFFECT_CHANCE;
     public static final ForgeConfigSpec.IntValue ROLL_PARTICLE_COUNT;
-
 
     public static final ForgeConfigSpec.ConfigValue<List<String>> ALLOWED_ROLL_SPELLS;
 
@@ -32,8 +30,16 @@ public class ModConfig {
     public static final ForgeConfigSpec.IntValue ROLL_LOCK_BUFFER_WINDOW;
     public static final ForgeConfigSpec.ConfigValue<List<String>> ROLL_LOCK_WHITELIST;
 
+
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ATTACK_ROLL_LOCK;
+    public static final ForgeConfigSpec.IntValue ATTACK_BUFFER_WINDOW_TICKS;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ATTACK_ROLL_FEEDBACK;
+
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ROLL_CANCEL_ATTACK;
+
     static {
         BUILDER.push("Unified Combat");
+
 
         ENABLE_ROLL_CANCEL = BUILDER
                 .comment("Allows rolling to cancel spell casting")
@@ -94,7 +100,8 @@ public class ModConfig {
                         "irons_spellbooks:root"
                 )));
 
-        BUILDER.push("Roll Lock");
+
+        BUILDER.push("Spell Roll Lock");
 
         ENABLE_ROLL_LOCK = BUILDER
                 .comment("Prevent rolling while casting spells")
@@ -116,6 +123,33 @@ public class ModConfig {
                 )));
 
         BUILDER.pop();
+
+
+        BUILDER.push("Attack Roll Lock");
+
+        ENABLE_ATTACK_ROLL_LOCK = BUILDER
+                .comment("Prevent rolling while a Better Combat weapon swing is in progress")
+                .define("enableAttackRollLock", false);
+
+        ATTACK_BUFFER_WINDOW_TICKS = BUILDER
+                .comment("Ticks before attack ends where rolling can be buffered (0 = disabled)",
+                        "If you press roll within this window, it will execute automatically when the attack finishes")
+                .defineInRange("attackBufferWindowTicks", 5, 0, 20);
+
+        ENABLE_ATTACK_ROLL_FEEDBACK = BUILDER
+                .comment("Play sound/text when roll is blocked during an attack")
+                .define("enableAttackRollFeedback", true);
+
+        BUILDER.pop();
+
+        BUILDER.push("Roll Cancel Attack");
+
+        ENABLE_ROLL_CANCEL_ATTACK = BUILDER
+                .comment("When you roll, automatically cancel any in-progress attack swing")
+                .define("enableRollCancelAttack", true);
+
+        BUILDER.pop();
+
         BUILDER.pop();
     }
 

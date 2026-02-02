@@ -19,45 +19,43 @@ public class RollLockServer {
     }
 
     private static void onPlayerStartRoll(ServerPlayer player, Vec3 velocity) {
-        if (!ModConfig.ENABLE_ROLL_LOCK.get()) {
-            sendAttackCancel(player);
-            return;
-        }
 
-        MagicData magic = MagicData.getPlayerMagicData(player);
-        boolean isCasting = magic != null && magic.getSyncedData().isCasting();
+        if (ModConfig.ENABLE_ROLL_LOCK.get()) {
+            MagicData magic = MagicData.getPlayerMagicData(player);
+            boolean isCasting = magic != null && magic.getSyncedData().isCasting();
 
-        String spellId = "";
-        if (isCasting && magic != null) {
-            try {
-                SpellData spellData = magic.getCastingSpell();
-                if (spellData != null) {
-                    AbstractSpell spell = spellData.getSpell();
-                    if (spell != null) {
-                        spellId = spell.getSpellId();
+            String spellId = "";
+            if (isCasting && magic != null) {
+                try {
+                    SpellData spellData = magic.getCastingSpell();
+                    if (spellData != null) {
+                        AbstractSpell spell = spellData.getSpell();
+                        if (spell != null) {
+                            spellId = spell.getSpellId();
+                        }
                     }
-                }
-            } catch (Throwable ignored) {}
-        }
-
-        boolean whitelisted = ModConfig.ROLL_LOCK_WHITELIST.get().contains(spellId);
-
-        if (isCasting && !whitelisted) {
-            if (NetworkHandler.INSTANCE != null) {
-                NetworkHandler.INSTANCE.send(
-                        PacketDistributor.PLAYER.with(() -> player),
-                        new CancelRollPacket()
-                );
+                } catch (Throwable ignored) {}
             }
-            return;
-        }
 
+            boolean whitelisted = ModConfig.ROLL_LOCK_WHITELIST.get().contains(spellId);
+
+            if (isCasting && !whitelisted) {
+                if (NetworkHandler.INSTANCE != null) {
+                    NetworkHandler.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> player),
+                            new CancelRollPacket()
+                    );
+                }
+                return;
+            }
+        }
         sendAttackCancel(player);
 
         player.getPersistentData().putLong("lastRollCancelTime", player.level().getGameTime());
     }
 
     private static void sendAttackCancel(ServerPlayer player) {
+        if (!ModConfig.ENABLE_ROLL_CANCEL_ATTACK.get()) return;
         if (NetworkHandler.INSTANCE != null) {
             NetworkHandler.INSTANCE.send(
                     PacketDistributor.PLAYER.with(() -> player),
