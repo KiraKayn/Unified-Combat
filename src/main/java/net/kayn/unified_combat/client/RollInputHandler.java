@@ -46,7 +46,7 @@ public class RollInputHandler {
         if (!ModConfig.ENABLE_ROLL_LOCK.get()) return;
 
         Minecraft mc = Minecraft.getInstance();
-        if (mc == null || mc.player == null) return;
+        if (mc.player == null) return;
 
         boolean casting = false;
         String spellId = "";
@@ -97,8 +97,20 @@ public class RollInputHandler {
 
     public static void cancelClientAttack() {
         Minecraft mc = Minecraft.getInstance();
-        if (mc == null || mc.player == null) return;
+        if (mc.player == null) return;
+
         try {
+            try {
+                Class<?> bcApi = Class.forName("net.bettercombat.api.MinecraftClient_BetterCombat");
+                if (bcApi.isInstance(mc)) {
+                    Object inProgressObj = bcApi.getMethod("isWeaponSwingInProgress").invoke(mc);
+                    if (inProgressObj instanceof Boolean inProgress) {
+                        if (!inProgress) return;
+                    }
+                }
+            } catch (ClassNotFoundException ignored) {
+            }
+
             mc.player.resetAttackStrengthTicker();
             mc.player.stopUsingItem();
             mc.player.swinging = false;
@@ -110,8 +122,8 @@ public class RollInputHandler {
                 if ((Boolean) bcHelper.getMethod("isDoingUpswing").invoke(null)) {
                     bcHelper.getMethod("cancelUpswing").invoke(null);
                 }
-            } catch (ClassNotFoundException ignored) { /* Better Combat not loaded */ }
-
+            } catch (ClassNotFoundException ignored) {
+            }
         } catch (Throwable ignored) {
         }
     }
